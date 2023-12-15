@@ -1,0 +1,37 @@
+name: GitHub Classroom Workflow
+- name: export-grade
+on: [push]
+
+permissions:
+  checks: write
+  actions: read
+  contents: read
+
+jobs:
+  grading:
+    if: ${{ !contains(github.actor, 'classroom') }}
+    name: Autograding
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: education/autograding@v1
+        id: autograding
+      
+        if: always()
+        run: |
+          grade=${{ steps.autograding.outputs.Points }}
+          parts=(${grade//\// })
+          points="points=${parts[0]}"
+          user="user_name=${{ github.actor }}"
+          
+          repofull=${{ github.repository }}
+          parts=(${repofull//\// })
+          reponame=${parts[1]}
+          template="${reponame/"-${{ github.actor }}"/""}"
+          assignment="assignment_name=$template"
+
+          wsfunction="wsfunction=local_gradeassignments_update_grade"
+          wstoken="wstoken=${{ secrets.MOODLE_TOKEN }}"
+          
+          url="${{ vars.MOODLE_URL}}?${wstoken}&${wsfunction}&$assignment&$user&$points"
+          curl $url
