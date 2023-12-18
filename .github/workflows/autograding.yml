@@ -1,5 +1,5 @@
 name: GitHub Classroom Workflow
-- name: export-grade
+-name: export-grade
 on: [push]
 
 permissions:
