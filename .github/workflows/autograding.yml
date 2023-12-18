@@ -12,31 +12,26 @@ jobs:
     if: ${{ !contains(github.actor, 'classroom') }}
     name: Autograding
     runs-on: ubuntu-latest
-
-    env:
-      grade: ${{ steps.autograding.outputs.Points }}
-      parts: (${grade//\// })
-      points: "points=${parts[0]}"
-      user: "user_name=${{ github.actor }}"
-      
-      repofull: ${{ github.repository }}
-      parts: (${repofull//\// })
-      reponame: ${parts[1]}
-      template: "${reponame/"-${{ github.actor }}"/""}"
-      assignment: "assignment_name=$template"
-
-      wsfunction: "wsfunction=local_gradeassignments_update_grade"
-      wstoken: "wstoken=${{ secrets.MOODLE_TOKEN }}"
-      wstoken: "wstoken=8690701b90958d43a590d3dee9f5dbc4"
-      url: "https://google.com/"
-
     steps:
       - uses: actions/checkout@v3
       - uses: education/autograding@v1
         id: autograding
       
         if: always()
-        run: |         
+        run: |
+          grade=${{ steps.autograding.outputs.Points }}
+          parts=(${grade//\// })
+          points="points=${parts[0]}"
+          user="user_name=${{ github.actor }}"
+          
+          repofull=${{ github.repository }}
+          parts=(${repofull//\// })
+          reponame=${parts[1]}
+          template="${reponame/"-${{ github.actor }}"/""}"
+          assignment="assignment_name=$template"
+
+          wsfunction="wsfunction=local_gradeassignments_update_grade"
+          wstoken="wstoken=${{ secrets.MOODLE_TOKEN }}"
+          
           url="${{ vars.MOODLE_URL}}?${wstoken}&${wsfunction}&$assignment&$user&$points"
-          url="$url?${wstoken}&${wsfunction}&$assignment&$user&$points"
           curl $url
