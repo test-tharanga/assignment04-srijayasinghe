@@ -11,10 +11,10 @@ permissions:
 jobs:
   copy-issues:
     if: ${{ contains(github.actor, 'classroom') }}
-    uses: BZZ-Commons/workflows/.github/workflows/setup.yml@main
+    uses: test-tharanga/workflows/.github/workflows/setup.yml@main
     with:
       #SOURCE_REPO: templates-python/m319_lu04_a00_classroom  # CHANGE owner/name of the repo with the issues
-      SOURCE_REPO: test-tharanga/template-php  # CHANGE owner/name of the repo with the issues
+      SOURCE_REPO: test-tharanga/assignment04-srijayasinghe  # CHANGE owner/name of the repo with the issues
       TARGET_REPO: ${{ github.repository }}
       ADD_LABELS: "false"
     secrets:
@@ -22,7 +22,7 @@ jobs:
 
   grading:
     if: ${{ !contains(github.actor, 'classroom') }}
-    uses: BZZ-Commons/workflows/.github/workflows/grading.yml@main
+    uses: test-tharanga/workflows/.github/workflows/grading.yml@main
     with:
       MOODLE: true  # CHANGE true=export grade to moodle
     secrets: inherit
