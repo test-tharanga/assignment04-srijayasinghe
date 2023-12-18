@@ -22,12 +22,12 @@ jobs:
     name: Autograding
     runs-on: ubuntu-latest
     steps:
-      -uses: actions/checkout@v3
+      - uses: actions/checkout@v3
         # checkout the content of the repository
-      -uses: ghwalin/autograder@master
+      - uses: ghwalin/autograder@master
         # run the test cases in .github/classroom/autograding.json
         id: autograding
-      -name: grade-moodle-assignment
+      - name: grade-moodle-assignment
         # grade the assignment in Moodle, runs even after an error in autograding
         if: ${{ always() }} 
         run: |
@@ -59,3 +59,4 @@ jobs:
              --data "$feedback" \
              --data "$maxpoints" \
              --data "repourl=${{ github.repository }}"
+             
